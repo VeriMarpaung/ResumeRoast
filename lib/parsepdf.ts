@@ -1,6 +1,12 @@
 import { PDFParse } from "pdf-parse";
+import { DOMMatrix } from "dommatrix";
 
 export async function extractTextFromPdf(buffer: Buffer): Promise<string> {
+	if (!globalThis.DOMMatrix) {
+		// Polyfill for pdfjs in Node.js runtimes (e.g., Vercel)
+		globalThis.DOMMatrix = DOMMatrix;
+	}
+
 	if (!buffer || buffer.length === 0) {
 		throw new Error("PDF buffer is empty.");
 	}
