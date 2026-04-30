@@ -1,65 +1,80 @@
-import Image from "next/image";
+"use client";
+
+import UploadZone from "@/components/UploadZone";
+import { useState } from "react";
+import AnalysisResults, { type AnalysisResult } from "@/components/AnalysisResults";
 
 export default function Home() {
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [extractedText, setExtractedText] = useState("");
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_#fff7ed,_#f8fafc_45%,_#e2e8f0_100%)] px-4 py-10 text-slate-950 sm:px-6 lg:px-8">
+      <main className="mx-auto flex w-full max-w-7xl flex-col gap-10 lg:flex-row lg:items-center lg:gap-14">
+        <section className="flex-1 space-y-6">
+          <div className="inline-flex rounded-full border border-slate-900/10 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-slate-600 shadow-sm backdrop-blur">
+            ResumeRoast + Rewrite
+          </div>
+
+          <div className="space-y-4">
+            <h1 className="max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
+              Brutally honest resume feedback, then a rewrite that actually helps.
+            </h1>
+            <p className="max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+              Upload a PDF resume, get a structured roast-style analysis, and turn weak bullets
+              into stronger, clearer, ATS-friendly writing.
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-2xl border border-slate-900/10 bg-white/80 p-4 shadow-sm backdrop-blur">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                Impact
+              </p>
+              <p className="mt-2 text-2xl font-semibold">92</p>
+            </div>
+            <div className="rounded-2xl border border-slate-900/10 bg-white/80 p-4 shadow-sm backdrop-blur">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                Clarity
+              </p>
+              <p className="mt-2 text-2xl font-semibold">68</p>
+            </div>
+            <div className="rounded-2xl border border-slate-900/10 bg-white/80 p-4 shadow-sm backdrop-blur">
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
+                ATS Score
+              </p>
+              <p className="mt-2 text-2xl font-semibold">74</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-3 text-sm text-slate-600">
+            <span className="rounded-full border border-slate-900/10 bg-white/70 px-4 py-2 shadow-sm">
+              PDF parsing
+            </span>
+            <span className="rounded-full border border-slate-900/10 bg-white/70 px-4 py-2 shadow-sm">
+              Streaming AI feedback
+            </span>
+            <span className="rounded-full border border-slate-900/10 bg-white/70 px-4 py-2 shadow-sm">
+              Interactive rewrites
+            </span>
+          </div>
+        </section>
+
+        <section className="flex-1 lg:max-w-2xl">
+          <UploadZone 
+            onAnalysisComplete={(result, text) => {
+              setAnalysisResult(result);
+              setExtractedText(text);
+            }}
+          />
+        </section>
       </main>
+
+      {analysisResult && extractedText && (
+        <div className="mx-auto w-full max-w-7xl mt-12">
+          <AnalysisResults analysis={analysisResult} resumeText={extractedText} />
+        </div>
+      )}
     </div>
   );
 }
