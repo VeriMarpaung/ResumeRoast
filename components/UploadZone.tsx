@@ -15,6 +15,10 @@ type UploadResponse = {
 	extractedText?: string;
 };
 
+type AnalyzeErrorResponse = {
+	error?: string;
+};
+
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 function formatFileSize(bytes: number) {
@@ -33,6 +37,21 @@ function getFileError(file: File) {
 	}
 
 	return "";
+}
+
+async function readJsonSafely<T>(response: Response): Promise<T | null> {
+	const contentType = response.headers.get("content-type") ?? "";
+	const responseText = await response.text();
+
+	if (!responseText.trim()) {
+		return null;
+	}
+
+	if (!contentType.toLowerCase().includes("application/json")) {
+		throw new Error(responseText.slice(0, 200) || "Unexpected non-JSON response.");
+	}
+
+	return JSON.parse(responseText) as T;
 }
 
 export default function UploadZone({ onAnalyze, onAnalysisComplete, className }: UploadZoneProps) {
@@ -89,10 +108,7 @@ export default function UploadZone({ onAnalyze, onAnalysisComplete, className }:
 				},
 				body: JSON.stringify({ resumeText }),
 			});
-			const responseText = await response.text();
-			const data = responseText
-				? (JSON.parse(responseText) as AnalysisResult & { error?: string })
-				: null;
+			const data = await readJsonSafely<AnalysisResult & AnalyzeErrorResponse>(response);
 
 			if (!response.ok) {
 				throw new Error(data?.error || "Analysis failed.");
