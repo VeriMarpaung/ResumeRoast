@@ -1,10 +1,10 @@
-import { PDFParse } from "pdf-parse";
-import DOMMatrix from "dommatrix";
-
 export async function extractTextFromPdf(buffer: Buffer): Promise<string> {
+	const { default: DOMMatrixPolyfill } = await import("dommatrix");
+	const { PDFParse } = await import("pdf-parse");
+
 	if (!globalThis.DOMMatrix) {
 		// Polyfill for pdfjs in Node.js runtimes (e.g., Vercel)
-		globalThis.DOMMatrix = DOMMatrix;
+		globalThis.DOMMatrix = DOMMatrixPolyfill as typeof globalThis.DOMMatrix;
 	}
 
 	if (!buffer || buffer.length === 0) {
