@@ -1,5 +1,5 @@
 import { PDFParse } from "pdf-parse";
-import { DOMMatrix } from "dommatrix";
+import DOMMatrix from "dommatrix";
 
 export async function extractTextFromPdf(buffer: Buffer): Promise<string> {
 	if (!globalThis.DOMMatrix) {
